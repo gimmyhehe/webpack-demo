@@ -4,14 +4,28 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: './src/index.js'
+    app: './src/index.js',
+    vendor:[
+      'lodash'
+    ]
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      title: 'Production'
-    }),
+      title: 'Caching'
+    })
   ],
+  optimization: {
+    splitChunks: {
+        cacheGroups: {
+            commons: {
+                name: "vendor",
+                chunks: "initial",
+                minChunks: 2
+            }
+        }
+    }
+  },
   module:{
     rules:[
       {
@@ -21,7 +35,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[chunkhash].bundle.js',
     path: path.resolve(__dirname, 'dist')
   }
 };
